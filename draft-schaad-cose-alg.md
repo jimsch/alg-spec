@@ -16,13 +16,25 @@ author:
   org: August Cellars
   email: ietf@augustcellars.com
 normative:
-  I-D.greevenbosch-appsawg-cbore-cddl:
+  I-D.greevenbosch-appsawg-cbor-cddl:
   I-D.schaad-cose:
   RFC5869:
 informative:
   RFC2119:
   RFC7159:
   RFC7049:
+  JWA:
+   title: 'JWA'
+   author:
+   - ins: M. Jones
+     org: Microsoft
+   date: ''
+  NIST-800-56A:
+    title: 'NIST 800.56Ar2'
+    author: 
+    - ins: NIST
+      org: U.S. National Institute of Standards and Technology
+    date: ''
 
 --- abstract
 
@@ -44,7 +56,7 @@ This document additionally defines some new algorithms that are commonly used in
 
 # Key Derivation Function Primatives
 
-The JOSE specifications all use a Key Derivation Fucntion (KDF) based on the Concat functionality from {{NIST.800-56A}}.  A new KDF primative is defined in this document to take its place.
+The JOSE specifications all use a Key Derivation Fucntion (KDF) based on the Concat functionality from {{NIST-800-56A}}.  A new KDF primative is defined in this document to take its place.
 
 ## HKDF Primative Definition
 
@@ -53,7 +65,7 @@ The inputs to the HKDF function consist of a salt, the input keying material (or
 
 The salt is optional to be provided.  It MUST be provided if the input keying material is used multiple times (for example with static-static ECDH key agreement).  The salt is placed into an attribute with the name 'salt' and SHOULD be of the same length as the hash function output.
 
-The context information is built using a structure similar to that defined in Section 5.8 of {{NIST.800-56A}}.  The context information is the OtherInfo structure defined below, this strucutre is encoded using CBOR.  The elements in the OtherInfo structure map to those used in both the NIST document and in Section 4.6.2 of {{JWA}}.
+The context information is built using a structure similar to that defined in Section 5.8 of {{NIST-800-56A}}.  The context information is the OtherInfo structure defined below, this strucutre is encoded using CBOR.  The elements in the OtherInfo structure map to those used in both the NIST document and in Section 4.6.2 of {{JWA}}.
 
 ~~~~ CDDL
 
@@ -98,7 +110,7 @@ The extract step can be omitted if the input keying material is uniformlly rando
 
 ## Ephemeral-Static ECDH
 
-{{JWA}} defines a four different ECHD algorithms.  When used with the CBOR specificiation, these algorithms are unchanged except for the fact that HKDF as defined in {{Section 3}} is used for the key derivation step.
+{{JWA}} defines a four different ECHD algorithms.  When used with the CBOR specificiation, these algorithms are unchanged except for the fact that HKDF as defined in Section 3 is used for the key derivation step.
 
 ## Static-Static ECHD
 
@@ -106,7 +118,7 @@ Static-Static ECHD (ECDH-SS) can be used as a form of origination validation.  W
 
 The recipient's key is identified using the same header parameters defined in {{JWA}}.  The sender's key identification is placed in the new header parameter 'spk'.  
 
-The 'spk' header parameter uses key structure defined in Section X {{COSE-SPEC}} contains a map.  The map may contain a key or a one or more of the key identification fields defined in {{JWA}} such as 'kid' or 'jku'.
+The 'spk' header parameter uses key structure defined in Section X {{I-D.schaad-cose}} contains a map.  The map may contain a key or a one or more of the key identification fields defined in {{JWA}} such as 'kid' or 'jku'.
 
 When this algorithm is used, an 'apu' value MUST be supplied.  The value used MUST be unique for every pairing of sender and recipient keys.
 
