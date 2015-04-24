@@ -23,6 +23,7 @@ informative:
   RFC2119:
   RFC7159:
   RFC7049:
+  RFC7253:
   JWA:
    title: 'JWA'
    author:
@@ -106,13 +107,14 @@ HKDF can be used with algorithms other than HMAC as the expand step, but it is n
 
 The extract step can be omitted if the input keying material is uniformlly randon.  This is not generally the case for the result of a key agreement opertion or a human generated shared secret, but can be for a machine generated secret.
 
-# Elliptical Curve Key Agreement 
+# Key Managment Algorithms
+## Elliptical Curve Key Agreement 
 
-## Ephemeral-Static ECDH
+### Ephemeral-Static ECDH
 
 {{JWA}} defines a four different ECHD algorithms.  When used with the CBOR specificiation, these algorithms are unchanged except for the fact that HKDF as defined in Section 3 is used for the key derivation step.
 
-## Static-Static ECHD
+### Static-Static ECHD
 
 Static-Static ECHD (ECDH-SS) can be used as a form of origination validation.  When used in a mode where only one ECDH-SS is used as a recipient for a message, the sender can make an assumption that the message was created by the owner of the sender half of the static key agreement.  (This assumes that the sender knows that it did not send the message.)  This type of origination validation cannot be demonstrated to a third part as can be done with asymmetric signature algorithms.
 
@@ -134,17 +136,41 @@ ALTERNATE: We could potentially do this by using the salt field of the HKDF func
 
 Put in the template for defining the header parameter 'spk'.
 
-## Security Considerations
+### Security Considerations
 
 Reuse of the same two key pairs along with the same KDF parameters will lead to the same key being re-used.  This is generally considered to be bad practice.
+
+## Direct key with KDF
+
+By combining a KDF function with a preshared secret, it is possible to extend the life of a shared secret as it does not ever get directly used.
+
+This mode can be used by keeping a counter that is used for the salt value in the HKDF function.  Each entity can keep it's own counter if the protocol specifies fixed values of 'apu' and 'apv' to be used .  For example one may be designated as the 'client' and one as the 'server'.  This will ensure that they will generate te same keys.  The counter can either be transmitted as part of the message or could be implicitly transmitted and both sides keep track of the other sides view of the counter as well.
 
 # Content Encryption Algorithms
 
 ## AES-CCM algorithm
 
+The CORE people are currently use the AES-CCM algorithm as their prefered content encryption algorithm.  The reference for AES-CCM is {{RFC3610}}.  
+
+| key | key | key | tag |
+| name | id | length | length |
+| AES-128-CCM-64 | - | 128 | 64 |
+
+
 ### IANA Considerations
 
 ### Security Considerations
+
+There have been security analysis and they generally look good.  Most of the complaints are about efficiency not security.  (http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/proposedmodes/ccm/ccm-ad1.pdf)  (http://csrc.nist.gov/groups/ST/toolkit/BCM/documents/comments/800-38_Series-Drafts/CCM/RW_CCM_comments.pdf)  OCB is not as nice since it requires both an encrypt and a decrypt engine.
+
+
+## AES-OCB algorithm
+
+This is the hot new content encryption algorithm {{RFC7253}}.
+
+| key | key | key | tag |
+| name | id | length | length |
+| AES-128-OCB-64 | - | 128 | 64 |
 
 # Message Authentication Algorithms
 
