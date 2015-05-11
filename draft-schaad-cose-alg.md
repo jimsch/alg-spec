@@ -175,9 +175,11 @@ This mode can be used by keeping a counter that is used for the salt value in th
 
 The CORE people are currently use the AES-CCM algorithm as their prefered content encryption algorithm.  The reference for AES-CCM is {{RFC3610}}.  
 
-| key | key | key | tag |
-| name | id | length | length |
-| AES-128-CCM-64 | - | 128 | 64 |
+| key  | key | key    | M | L | Nonce  |
+| name | id  | length |   |   | Length |
+| AES-128-CCM-64 | - | 128 | 8 | 8 | 15-L |
+
+
 
 
 ### IANA Considerations
